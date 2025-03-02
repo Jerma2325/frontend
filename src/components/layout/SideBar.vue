@@ -21,6 +21,16 @@
           ></v-btn>
         </template>
       </v-list-item>
+      
+      <v-list-item v-if="user?.ethAddress">
+        <template v-slot:prepend>
+          <v-icon icon="mdi-ethereum" />
+        </template>
+        <v-tooltip activator="parent" location="bottom">
+          {{ user.ethAddress }}
+        </v-tooltip>
+        <div class="text-truncate">{{ truncatedAddress }}</div>
+      </v-list-item>
     </v-list>
     
     <v-divider></v-divider>
@@ -51,6 +61,13 @@ import { useAuthStore } from '../../stores/auth'
 const authStore = useAuthStore()
 const router = useRouter()
 const user = computed(() => authStore.getUser)
+
+const truncatedAddress = computed(() => {
+  if (!user.value?.ethAddress) return '';
+  
+  const address = user.value.ethAddress;
+  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+})
 
 const logout = () => {
   console.log('Logging out from sidebar...')

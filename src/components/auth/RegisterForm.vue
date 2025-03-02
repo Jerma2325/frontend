@@ -1,7 +1,6 @@
 <template>
   <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
     <v-card-text>
-   
       <v-text-field
         v-model="username"
         label="Username"
@@ -15,6 +14,17 @@
         label="Email"
         prepend-icon="mdi-email"
         :rules="[rules.required, rules.email]"
+        required
+      ></v-text-field>
+      
+      <!-- New field for blockchain account address -->
+      <v-text-field
+        v-model="ethAddress"
+        label="Ethereum Address"
+        prepend-icon="mdi-ethereum"
+        :rules="[rules.required, rules.ethAddress]"
+        hint="Your Ethereum wallet address (starts with 0x)"
+        persistent-hint
         required
       ></v-text-field>
      
@@ -71,6 +81,7 @@ import { useAuthStore } from '../../stores/auth'
 
 const username = ref('')
 const email = ref('')
+const ethAddress = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const showPassword = ref(false)
@@ -88,11 +99,11 @@ const passwordMatch = (v) => {
   return v === password.value || 'Passwords do not match'
 }
 
-
 const rules = {
   required: v => !!v || 'This field is required',
   email: v => /.+@.+\..+/.test(v) || 'Email must be valid',
-  password: v => v.length >= 8 || 'Password must be at least 8 characters'
+  password: v => v.length >= 8 || 'Password must be at least 8 characters',
+  ethAddress: v => /^0x[a-fA-F0-9]{40}$/.test(v) || 'Must be a valid Ethereum address'
 }
 
 const submitForm = async () => {
@@ -102,12 +113,14 @@ const submitForm = async () => {
     console.log('Submitting registration form with data:', {
       username: username.value,
       email: email.value,
+      ethAddress: ethAddress.value,
       password: '***'
     })
     
     const success = await authStore.register({
       username: username.value,
       email: email.value,
+      ethAddress: ethAddress.value,
       password: password.value
     })
     

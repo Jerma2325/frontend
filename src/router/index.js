@@ -19,18 +19,20 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: LoginView,
+      meta: { guest: true }
     },
     {
       path: '/register',
       name: 'register',
-      component: RegisterView
+      component: RegisterView,
+      meta: { guest: true }
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
-      
+      meta: { requiresAuth: true }
     },
     {
       path: '/register-ip',
@@ -47,19 +49,42 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+  const isAuthenticated = authStore.isAuthenticated
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const isGuestRoute = to.matched.some(record => record.meta.guest)
 
   console.log('Route navigation:', { 
+    from: from.name,
     to: to.name, 
-    requiresAuth: to.meta.requiresAuth,
-    isAuthenticated: authStore.isAuthenticated 
+    requiresAuth,
+    isGuestRoute,
+    isAuthenticated
   })
   
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+  // Validate token by fetching user profile if authenticated but no user data
+  if (isAuthenticated && !authStore.getUser) {
+    console.log('Token exists but no user data, fetching profile...')
+    try {
+      await authStore.fetchUserProfile()
+    } catch (error) {
+      console.error('Failed to fetch user profile, clearing authentication')
+      authStore.logout()
+    }
+  }
+  
+  // Handle authentication requirements
+  if (requiresAuth && !authStore.isAuthenticated) {
     console.log('Authentication required, redirecting to login')
-    next('/login')
-  } else {
+    next({ name: 'login', query: { redirect: to.fullPath } })
+  } 
+  // Redirect logged in users away from login/register pages
+  else if (isAuthenticated && isGuestRoute) {
+    console.log('User is already authenticated, redirecting to dashboard')
+    next({ name: 'dashboard' })
+  }
+  else {
     next()
   }
 })

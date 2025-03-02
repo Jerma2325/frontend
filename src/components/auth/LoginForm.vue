@@ -45,10 +45,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, defineEmits } from 'vue'
 import { useAuthStore } from '../../stores/auth'
+import apiClient from '../../plugins/axios'
 
+const emit = defineEmits(['login-success'])
 
 const username = ref('')
 const password = ref('')
@@ -57,7 +58,6 @@ const valid = ref(false)
 const form = ref(null)
 
 const authStore = useAuthStore()
-const router = useRouter()
 
 const loading = computed(() => authStore.loading)
 const errorMessage = computed(() => authStore.error)
@@ -65,7 +65,6 @@ const errorMessage = computed(() => authStore.error)
 const rules = {
   required: v => !!v || 'This field is required'
 }
-
 
 const submitForm = async () => {
   if (!valid.value) return
@@ -84,10 +83,23 @@ const submitForm = async () => {
     console.log('Login result:', success)
     
     if (success) {
-      setTimeout(() => {
-        console.log('Navigating to dashboard...')
-        router.push({ name: 'dashboard' })
-      }, 500)
+      // Check if token is properly stored
+      const token = localStorage.getItem('token')
+      console.log('Token after login:', token ? token.substring(0, 20) + '...' : 'Missing')
+      
+      // Check axios headers
+      console.log('Axios default headers:', JSON.stringify(apiClient.defaults.headers.common))
+      
+      // Test API call to verify token is being sent
+      try {
+        const testResponse = await apiClient.get('/api/auth/profile')
+        console.log('Test profile API call successful:', testResponse.status)
+      } catch (error) {
+        console.error('Test profile API call failed:', error)
+      }
+      
+      // Emit success event
+      emit('login-success')
     }
   } catch (error) {
     console.error('Login form error:', error)
