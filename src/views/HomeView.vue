@@ -4,7 +4,7 @@
       <v-col cols="12" sm="8" md="6" lg="4">
         <v-card elevation="10" class="rounded-lg">
           <v-card-title class="text-center text-h4 pt-6 pb-2">
-            Blockchain IP Registry
+            ChainD
           </v-card-title>
           
           <v-card-text class="text-center pb-4">
@@ -22,6 +22,17 @@
                     :to="{ name: 'dashboard' }"
                   >
                     Go to Dashboard
+                  </v-btn>
+                </v-col>
+                
+                <v-col cols="auto">
+                  <v-btn
+                    color="error"
+                    size="large"
+                    prepend-icon="mdi-logout"
+                    @click="logout"
+                  >
+                    Logout
                   </v-btn>
                 </v-col>
               </template>
@@ -51,7 +62,6 @@
               </template>
             </v-row>
           </v-card-text>
-
         </v-card>
       </v-col>
     </v-row>
@@ -60,8 +70,15 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
+const router = useRouter()
 const authStore = useAuthStore()
 const isAuthenticated = computed(() => authStore.isAuthenticated)
+
+const logout = () => {
+  authStore.logout()
+  router.push({ name: 'home' })
+}
 </script>

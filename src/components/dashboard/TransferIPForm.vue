@@ -83,7 +83,7 @@
 <script setup>
 import { ref, computed, onMounted, defineProps } from 'vue'
 import { useRouter } from 'vue-router'
-import { useIPStore } from '../../stores/ip'
+import axios from 'axios'
 
 const props = defineProps({
   intellectualProperty: {
@@ -98,12 +98,10 @@ const newOwnerAddress = ref('')
 const valid = ref(false)
 const form = ref(null)
 const successMessage = ref('')
+const errorMessage = ref('')
+const loading = ref(false)
 
-const ipStore = useIPStore()
 const router = useRouter()
-
-const loading = computed(() => ipStore.getLoading)
-const errorMessage = computed(() => ipStore.getError)
 
 const rules = {
   required: v => !!v || 'This field is required',
@@ -122,28 +120,40 @@ onMounted(() => {
 const submitForm = async () => {
   if (!valid.value) return
   
+  loading.value = true
+  errorMessage.value = ''
+  
   try {
-    console.log('Submitting transfer form with data:', {
-      ipId: ipId.value,
-      newOwnerAddress: newOwnerAddress.value
+    console.log('Submitting transfer for IP:', ipId.value)
+    
+    // Get token from localStorage
+    const token = localStorage.getItem('token')
+    if (!token) {
+      throw new Error('Authentication token not found')
+    }
+    
+    // Send request directly using axios
+    const response = await axios({
+      method: 'post',
+      url: `/api/intellectual-properties/${ipId.value}/transfer`,
+      data: { newOwnerAddress: newOwnerAddress.value },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
     })
     
-    const result = await ipStore.transferIP(
-      ipId.value, 
-      { newOwnerAddress: newOwnerAddress.value }
-    )
+    console.log('Transfer successful:', response.data)
+    successMessage.value = 'Intellectual property transferred successfully!'
     
-    console.log('Transfer result:', result)
-    
-    if (result) {
-      successMessage.value = 'Intellectual property transferred successfully!'
-      
-      setTimeout(() => {
-        router.push({ name: 'dashboard' })
-      }, 2000)
-    }
+    setTimeout(() => {
+      router.push({ name: 'dashboard' })
+    }, 2000)
   } catch (error) {
-    console.error('Transfer form error:', error)
+    console.error('Transfer error:', error)
+    errorMessage.value = error.response?.data?.message || error.message || 'Failed to transfer intellectual property'
+  } finally {
+    loading.value = false
   }
 }
 </script>

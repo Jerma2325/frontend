@@ -49,6 +49,16 @@
         title="Register New IP"
         value="register-ip"
       ></v-list-item>
+      <v-divider class="my-2"></v-divider>
+      
+      <v-list-item
+        @click="logout"
+        prepend-icon="mdi-logout"
+        title="Logout"
+        value="logout"
+        color="error"
+      ></v-list-item>
+    
     </v-list>
   </v-navigation-drawer>
 </template>

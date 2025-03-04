@@ -1,7 +1,7 @@
 <template>
   <v-app-bar elevation="2" color="primary">
     <v-app-bar-title>
-      IP Registry
+      ChainD - Secure YOURS intellectual properties
     </v-app-bar-title>
     
     <v-spacer></v-spacer>

@@ -49,44 +49,34 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
   const isAuthenticated = authStore.isAuthenticated
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  const isGuestRoute = to.matched.some(record => record.meta.guest)
 
   console.log('Route navigation:', { 
-    from: from.name,
     to: to.name, 
-    requiresAuth,
-    isGuestRoute,
-    isAuthenticated
+    requiresAuth: to.meta.requiresAuth,
+    guestOnly: to.meta.guestOnly,
+    isAuthenticated: isAuthenticated 
   })
   
-  // Validate token by fetching user profile if authenticated but no user data
-  if (isAuthenticated && !authStore.getUser) {
-    console.log('Token exists but no user data, fetching profile...')
-    try {
-      await authStore.fetchUserProfile()
-    } catch (error) {
-      console.error('Failed to fetch user profile, clearing authentication')
-      authStore.logout()
-    }
+  // Check if the route requires authentication
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    console.log('Authentication required, redirecting to login')
+    next('/login')
+    return
   }
   
-  // Handle authentication requirements
-  if (requiresAuth && !authStore.isAuthenticated) {
-    console.log('Authentication required, redirecting to login')
-    next({ name: 'login', query: { redirect: to.fullPath } })
-  } 
-  // Redirect logged in users away from login/register pages
-  else if (isAuthenticated && isGuestRoute) {
-    console.log('User is already authenticated, redirecting to dashboard')
-    next({ name: 'dashboard' })
+  // Check if the route is guest-only (login/register) and user is already authenticated
+  if (to.meta.guestOnly && isAuthenticated) {
+    console.log('User already authenticated, redirecting to dashboard')
+    next('/dashboard')
+    return
   }
-  else {
-    next()
-  }
+  
+  // Proceed with navigation
+  next()
 })
+
 
 export default router
