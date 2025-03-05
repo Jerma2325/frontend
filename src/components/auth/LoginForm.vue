@@ -83,14 +83,11 @@ const submitForm = async () => {
     console.log('Login result:', success)
     
     if (success) {
-      // Check if token is properly stored
       const token = localStorage.getItem('token')
       console.log('Token after login:', token ? token.substring(0, 20) + '...' : 'Missing')
       
-      // Check axios headers
       console.log('Axios default headers:', JSON.stringify(apiClient.defaults.headers.common))
       
-      // Test API call to verify token is being sent
       try {
         const testResponse = await apiClient.get('/api/auth/profile')
         console.log('Test profile API call successful:', testResponse.status)
@@ -98,7 +95,6 @@ const submitForm = async () => {
         console.error('Test profile API call failed:', error)
       }
       
-      // Emit success event
       emit('login-success')
     }
   } catch (error) {

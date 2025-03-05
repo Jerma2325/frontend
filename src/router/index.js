@@ -60,21 +60,18 @@ router.beforeEach((to, from, next) => {
     isAuthenticated: isAuthenticated 
   })
   
-  // Check if the route requires authentication
   if (to.meta.requiresAuth && !isAuthenticated) {
     console.log('Authentication required, redirecting to login')
     next('/login')
     return
   }
   
-  // Check if the route is guest-only (login/register) and user is already authenticated
   if (to.meta.guestOnly && isAuthenticated) {
     console.log('User already authenticated, redirecting to dashboard')
     next('/dashboard')
     return
   }
   
-  // Proceed with navigation
   next()
 })
 

@@ -17,7 +17,6 @@
         required
       ></v-text-field>
       
-      <!-- New field for blockchain account address -->
       <v-text-field
         v-model="ethAddress"
         label="Ethereum Address"

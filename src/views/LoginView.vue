@@ -49,12 +49,10 @@ const route = useRoute()
 const onLoginSuccess = () => {
   console.log('Login success event received in LoginView')
   
-  // Check localStorage for token
   setTimeout(() => {
     const token = localStorage.getItem('token')
     console.log('Token in localStorage after login:', token ? 'Present' : 'Missing')
     
-    // Navigate to dashboard or redirect path
     const redirectPath = route.query.redirect || '/dashboard'
     console.log('Redirecting to:', redirectPath)
     router.push(redirectPath)

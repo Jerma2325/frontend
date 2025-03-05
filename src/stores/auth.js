@@ -75,7 +75,6 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('token')
       delete axios.defaults.headers.common['Authorization']
       
-      // Hard reload to clear any cached state
       window.location.href = '/'
     },
     
