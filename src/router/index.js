@@ -46,6 +46,8 @@ const router = createRouter({
       component: TransferIPView,
       meta: { requiresAuth: true }
     }
+   
+
   ]
 })
 

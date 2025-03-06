@@ -87,7 +87,6 @@ const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const valid = ref(false)
 const form = ref(null)
-
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -122,7 +121,6 @@ const submitForm = async () => {
       ethAddress: ethAddress.value,
       password: password.value
     })
-    
     console.log('Registration result:', success)
     
     if (success) {

@@ -64,6 +64,7 @@ export const useAuthStore = defineStore('auth', {
         this.error = error.response?.data?.error || 'Login failed'
         return false
       } finally {
+        
         this.loading = false
       }
     },
@@ -104,9 +105,35 @@ export const useAuthStore = defineStore('auth', {
         this.loading = false
       }
     },
-
+    async updateWalletAddress(address) {
+      if (!this.token || !address) return false;
+      
+      this.loading = true;
+      
+      try {
+        const response = await axios.post('/api/auth/update-wallet', 
+          { ethAddress: address },
+          { headers: { 'Authorization': `Bearer ${this.token}` }}
+        );
+        
+        if (response.data) {
+          this.user = {
+            ...this.user,
+            ethAddress: address
+          };
+          return true;
+        }
+      } catch (error) {
+        console.error('Failed to update wallet address:', error);
+        this.error = error.response?.data?.message || 'Failed to update wallet address';
+        return false;
+      } finally {
+        this.loading = false;
+      }
+    },
     getUserEthAddress() {
       return this.user?.ethAddress || null
     }
+    
   }
 })
