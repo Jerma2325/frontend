@@ -1,4 +1,3 @@
-// src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
@@ -6,6 +5,8 @@ import RegisterView from '../views/RegisterView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import RegisterIPView from '../views/RegisterIPView.vue'
 import TransferIPView from '../views/TransferIPView.vue'
+import WalletView from '../views/WalletView.vue'
+
 import { useAuthStore } from '../stores/auth'
 
 const router = createRouter({
@@ -44,6 +45,12 @@ const router = createRouter({
       path: '/transfer-ip/:id',
       name: 'transfer-ip',
       component: TransferIPView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/wallet',
+      name: 'wallet',
+      component: WalletView,
       meta: { requiresAuth: true }
     }
    

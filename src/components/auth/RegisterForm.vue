@@ -26,6 +26,18 @@
         persistent-hint
         required
       ></v-text-field>
+      
+      <v-text-field
+        v-model="privateKey"
+        label="Private Key (optional)"
+        prepend-icon="mdi-key"
+        :rules="[rules.privateKeyOptional]"
+        hint="Your Ethereum wallet private key (64 hex characters, will be encrypted)"
+        persistent-hint
+        :append-icon="showPrivateKey ? 'mdi-eye' : 'mdi-eye-off'"
+        :type="showPrivateKey ? 'text' : 'password'"
+        @click:append="showPrivateKey = !showPrivateKey"
+      ></v-text-field>
      
       <v-text-field
         v-model="password"
@@ -81,12 +93,15 @@ import { useAuthStore } from '../../stores/auth'
 const username = ref('')
 const email = ref('')
 const ethAddress = ref('')
+const privateKey = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
+const showPrivateKey = ref(false)
 const valid = ref(false)
 const form = ref(null)
+
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -101,7 +116,11 @@ const rules = {
   required: v => !!v || 'This field is required',
   email: v => /.+@.+\..+/.test(v) || 'Email must be valid',
   password: v => v.length >= 8 || 'Password must be at least 8 characters',
-  ethAddress: v => /^0x[a-fA-F0-9]{40}$/.test(v) || 'Must be a valid Ethereum address'
+  ethAddress: v => /^0x[a-fA-F0-9]{40}$/.test(v) || 'Must be a valid Ethereum address',
+  privateKeyOptional: v => {
+    if (!v) return true; // Optional
+    return /^(0x)?[a-fA-F0-9]{64}$/.test(v) || 'Must be a valid Ethereum private key';
+  }
 }
 
 const submitForm = async () => {
@@ -112,6 +131,7 @@ const submitForm = async () => {
       username: username.value,
       email: email.value,
       ethAddress: ethAddress.value,
+      hasPrivateKey: !!privateKey.value,
       password: '***'
     })
     
@@ -119,8 +139,10 @@ const submitForm = async () => {
       username: username.value,
       email: email.value,
       ethAddress: ethAddress.value,
+      privateKey: privateKey.value,
       password: password.value
     })
+    
     console.log('Registration result:', success)
     
     if (success) {

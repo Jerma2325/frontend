@@ -79,7 +79,7 @@ const submitForm = async () => {
       username: username.value,
       password: password.value
     })
-    updateWalletAddress(get)
+    
     console.log('Login result:', success)
     
     if (success) {
