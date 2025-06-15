@@ -1,9 +1,9 @@
 <template>
     <div>
       <v-card v-if="!isConnected" class="mb-4 pa-4">
-        <v-card-title>Connect Your Blockchain Wallet</v-card-title>
+        <v-card-title>Connect Your Wallet</v-card-title>
         <v-card-text>
-          <p>Connect your Ethereum wallet to perform blockchain transactions.</p>
+          <p>Connect your Ethereum wallet to perform transactions.</p>
           <v-btn 
             color="primary" 
             @click="connectWallet" 

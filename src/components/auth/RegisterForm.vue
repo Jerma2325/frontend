@@ -118,7 +118,7 @@ const rules = {
   password: v => v.length >= 8 || 'Password must be at least 8 characters',
   ethAddress: v => /^0x[a-fA-F0-9]{40}$/.test(v) || 'Must be a valid Ethereum address',
   privateKeyOptional: v => {
-    if (!v) return true; // Optional
+    if (!v) return true; 
     return /^(0x)?[a-fA-F0-9]{64}$/.test(v) || 'Must be a valid Ethereum private key';
   }
 }

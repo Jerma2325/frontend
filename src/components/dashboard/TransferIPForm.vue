@@ -6,7 +6,7 @@
         variant="tonal"
         class="mb-4"
       >
-        You are about to transfer ownership of <strong>{{ intellectualProperty.name }}</strong> to another blockchain address.
+        You are about to transfer ownership of <strong>{{ intellectualProperty.name }}</strong> to another address.
         This action cannot be undone.
       </v-alert>
       
@@ -126,13 +126,11 @@ const submitForm = async () => {
   try {
     console.log('Submitting transfer for IP:', ipId.value)
     
-    // Get token from localStorage
     const token = localStorage.getItem('token')
     if (!token) {
       throw new Error('Authentication token not found')
     }
-    
-    // Send request directly using axios
+
     const response = await axios({
       method: 'post',
       url: `/api/intellectual-properties/${ipId.value}/transfer`,

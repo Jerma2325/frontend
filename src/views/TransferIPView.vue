@@ -38,7 +38,7 @@
             />
             
             <v-card-text v-else class="text-center py-6">
-              <p>No intellectual property found with the specified ID.</p>
+              <p>No IP found with the specified ID.</p>
               <v-btn
                 color="primary"
                 :to="{ name: 'dashboard' }"

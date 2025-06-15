@@ -3,8 +3,7 @@
       <v-row>
         <v-col cols="12">
           <h2 class="text-h4 mb-4">Wallet Management</h2>
-          
-          <!-- Current Wallet Status Card -->
+         
           <v-card v-if="userWallet" class="mb-6" variant="outlined">
             <v-card-item>
               <template v-slot:prepend>
@@ -83,7 +82,7 @@
                 variant="outlined"
                 @click="showRemoveWalletDialog = true"
               >
-                Remove Wallet
+                Delete
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -94,7 +93,7 @@
               <v-icon icon="mdi-wallet-outline" size="64" color="grey" class="mb-4"></v-icon>
               <h3 class="text-h5 mb-2">No Wallet Connected</h3>
               <p class="text-body-1 mb-4">
-                Connect an Ethereum wallet to register and transfer intellectual properties on the blockchain.
+                Connect an Ethereum wallet to start using whole functionallity of this app.
               </p>
             </v-card-text>
           </v-card>
@@ -162,8 +161,8 @@
             <p>Are you sure you want to remove your wallet from this account?</p>
             <p class="text-caption text-red mt-2">
               <v-icon icon="mdi-alert" size="small" color="error" class="me-1"></v-icon>
-              This will not delete your wallet from the blockchain, but will remove your access to it from this application.
-              Make sure you have backed up your private key or seed phrase.
+              This will not delete your wallet from the blockchain, but will remove your access to it.
+              Make sure you have backed up your private key.
             </p>
           </v-card-text>
           <v-card-actions>
@@ -180,7 +179,7 @@
               @click="removeWallet"
               :loading="loadingRemoveWallet"
             >
-              Remove Wallet
+              Delete
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -281,7 +280,6 @@
     if (!userWallet.value) return;
     
     navigator.clipboard.writeText(userWallet.value);
-    // You could add a notification here
   }
   
   function openBlockExplorer() {

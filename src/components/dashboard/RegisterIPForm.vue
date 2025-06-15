@@ -17,7 +17,6 @@
         auto-grow
       ></v-textarea>
 
-      <!-- Display current user's ETH address -->
       <v-text-field
         v-model="ethAddress"
         label="Your Ethereum Address"
@@ -28,7 +27,6 @@
         persistent-hint
       ></v-text-field>
 
-      <!-- File upload -->
       <div class="mb-4">
         <label for="file-upload" class="text-subtitle-1 d-block mb-2">
           <v-icon class="me-2">mdi-file-upload</v-icon>
@@ -127,11 +125,10 @@ const router = useRouter()
 const loading = computed(() => ipStore.getLoading || authStore.loading)
 const errorMessage = computed(() => ipStore.getError || authStore.getError)
 
-// Refresh user data
+
 const refreshUser = async () => {
   console.log("Manually refreshing user data...")
   
-  // Clear current user data
   ethAddress.value = ''
   
   try {
@@ -145,7 +142,6 @@ const refreshUser = async () => {
   }
 }
 
-// Set the user's Ethereum address when component mounts
 onMounted(async () => {
   console.log("Component mounted, fetching user profile...")
   await refreshUser()
@@ -181,16 +177,13 @@ const submitForm = async () => {
     return
   }
   
-  // Create a new FormData object
   const formData = new FormData()
   
-  // Add form fields
   formData.append('name', name.value)
   if (description.value) {
     formData.append('description', description.value)
   }
   
-  // Add the file
   formData.append('file', selectedFile.value)
   
   console.log("FormData created with:", {
@@ -202,7 +195,6 @@ const submitForm = async () => {
   try {
     console.log("Sending request to backend...")
     
-    // Use direct axios call to bypass any cached configuration
     const response = await axios({
       method: 'post',
       url: '/api/intellectual-properties',

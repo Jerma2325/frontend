@@ -143,7 +143,7 @@
   
   const rules = {
     required: v => !!v || 'This field is required',
-    passwordStrength: v => (v && v.length >= 8) || 'Password must be at least 8 characters',
+    passwordStrength: v => (v && v.length >= 7) || 'Password must be at least 7 characters',
     passwordMatch: v => v === password.value || 'Passwords do not match',
     validPrivateKey: v => /^(0x)?[0-9a-fA-F]{64}$/.test(v) || 'Invalid private key format'
   };
